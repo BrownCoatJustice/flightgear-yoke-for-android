@@ -11,8 +11,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sensorDriver: SensorDriver
     private lateinit var orientationEngine: OrientationEngine
     private lateinit var controlMapper: ControlMapper
+    private lateinit var udpSender: UdpSender
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        udpSender = UdpSender("192.168.1.3", 5005)
+
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -30,10 +33,13 @@ class MainActivity : AppCompatActivity() {
             val roll = controlMapper.mapRoll(rawRollAxis)
             val pitch = controlMapper.mapPitch(rawPitchAxis)
 
+            udpSender.send(roll, pitch)
+
             runOnUiThread {
                 binding.textView.text =
                     "Roll: %.2f\nPitch: %.2f".format(roll, pitch)
             }
+
         }
 
         binding.calibrateButton.setOnClickListener {
@@ -51,5 +57,6 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         sensorDriver.stop()
+        udpSender.close()
     }
 }

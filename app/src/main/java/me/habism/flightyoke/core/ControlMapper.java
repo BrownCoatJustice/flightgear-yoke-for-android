@@ -11,8 +11,8 @@ public class ControlMapper {
 
     private float neutralRoll = 0f;
     private float neutralPitch = 0f;
-
     private final SharedPreferences prefs;
+    private float deadzone = 0.05f;  // 5% center deadband
 
     public ControlMapper(Context context) {
         prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
@@ -32,17 +32,32 @@ public class ControlMapper {
 
     public float mapRoll(float rollRad) {
         float value = rollRad - neutralRoll;
-        value /= Math.toRadians(45);  // 45° full deflection
-        return clamp(value);
+        value /= Math.toRadians(45);
+
+        value = clamp(value);
+        value = applyDeadzone(value);
+
+        return value;
     }
 
     public float mapPitch(float pitchRad) {
         float value = pitchRad - neutralPitch;
-        value /= Math.toRadians(30);  // 30° full deflection
-        return clamp(value);
+        value /= Math.toRadians(30);
+
+        value = clamp(value);
+        value = applyDeadzone(value);
+
+        return value;
     }
 
     private float clamp(float v) {
         return Math.max(-1f, Math.min(1f, v));
+    }
+
+    private float applyDeadzone(float value) {
+        if (Math.abs(value) < deadzone) {
+            return 0f;
+        }
+        return value;
     }
 }
