@@ -24,11 +24,11 @@ class MainActivity : AppCompatActivity() {
         sensorDriver = SensorDriver(this) { values ->
             orientationEngine.updateAccelerometer(values)
 
-            val rollRad = orientationEngine.getRollRad()
-            val pitchRad = orientationEngine.getPitchRad()
+            val rawRollAxis = orientationEngine.getPitchRad()   // left/right
+            val rawPitchAxis = orientationEngine.getRollRad()   // push/pull
 
-            val roll = controlMapper.mapRoll(rollRad)
-            val pitch = controlMapper.mapPitch(pitchRad)
+            val roll = controlMapper.mapRoll(rawRollAxis)
+            val pitch = controlMapper.mapPitch(rawPitchAxis)
 
             runOnUiThread {
                 binding.textView.text =
@@ -37,9 +37,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.calibrateButton.setOnClickListener {
-            val rollRad = orientationEngine.getRollRad()
-            val pitchRad = orientationEngine.getPitchRad()
-            controlMapper.calibrate(rollRad, pitchRad)
+            val rawRollAxis = orientationEngine.getPitchRad()
+            val rawPitchAxis = orientationEngine.getRollRad()
+            controlMapper.calibrate(rawRollAxis, rawPitchAxis)
         }
     }
 

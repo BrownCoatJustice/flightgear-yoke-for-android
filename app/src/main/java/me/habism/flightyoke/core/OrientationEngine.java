@@ -8,13 +8,15 @@ public class OrientationEngine {
     }
 
     public float getRollRad() {
-        return (float) Math.atan2(accelVals[1], accelVals[2]);
+        // rotation left/right (bank)
+        return (float) Math.atan2(accelVals[0], accelVals[2]);
     }
 
     public float getPitchRad() {
+        // push/pull (nose up/down)
         return (float) Math.atan2(
-                -accelVals[0],
-                Math.sqrt(accelVals[1] * accelVals[1] +
+                accelVals[1],
+                Math.sqrt(accelVals[0] * accelVals[0] +
                         accelVals[2] * accelVals[2])
         );
     }
