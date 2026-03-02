@@ -3,6 +3,8 @@ package me.habism.flightyoke.core;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class UdpSender {
 
@@ -10,6 +12,7 @@ public class UdpSender {
     private final int port;
     private DatagramSocket sock;
     private InetAddress addr;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public UdpSender(String host, int port) {
         this.host = host;
@@ -25,18 +28,20 @@ public class UdpSender {
     }
 
     public void send(float roll, float pitch) {
-        try {
-            String message = roll + "," + pitch;
+        executor.execute(() -> {
+            try {
+                String message = roll + "," + pitch + "\n";
 
-            byte[] data = message.getBytes();
+                byte[] data = message.getBytes();
 
-            DatagramPacket packet =
-                    new DatagramPacket(data, data.length, addr, port);
-            System.out.println("Sending: " + message);
-            sock.send(packet);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+                DatagramPacket packet =
+                        new DatagramPacket(data, data.length, addr, port);
+                System.out.println("Sending: " + message);
+                sock.send(packet);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     public void close() {

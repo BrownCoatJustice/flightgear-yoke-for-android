@@ -14,7 +14,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var udpSender: UdpSender
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        udpSender = UdpSender("192.168.1.3", 5005)
+        udpSender = UdpSender("192.168.31.174", 5005)
 
         super.onCreate(savedInstanceState)
 
