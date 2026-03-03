@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<PropertyList>
+  <generic>
+
+    <input>
+      <binary_mode>false</binary_mode>
+      <var_separator>,</var_separator>
+      <line_separator>newline</line_separator>
+
+      <chunk>
+        <name>aileron</name>
+        <node>/controls/flight/aileron</node>
+		<!-- <node>/sim/test-aileron</node> -->
+        <type>float</type>
+        <format>%f</format>
+      </chunk>
+
+      <chunk>
+        <name>elevator</name>
+        <node>/controls/flight/elevator</node>
+		<!-- <node>/sim/test-elevator</node> -->
+        <type>float</type>
+        <format>%f</format>
+      </chunk>
+
+    </input>
+
+  </generic>
+</PropertyList>
