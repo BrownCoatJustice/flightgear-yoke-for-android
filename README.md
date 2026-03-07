@@ -35,14 +35,16 @@ To run the app on your physical device, you must first enable **Developer Option
 ### 4. FlightGear Protocol Setup
 The simulator needs a protocol file to understand the incoming data format (Roll and Pitch).
 
-1.  Locate your FlightGear **data** directory (this varies by OS).
+1.  Locate your FlightGear **data** directory (this varies by installation and OS).
 2.  Inside `data`, open the `Protocol` subfolder.
 3.  Copy the `flightyoke.xml` file from the `flightgear_resources/Protocol` folder in this repo into that FlightGear `Protocol` folder.
 
 ### 5. Launching the Simulator
 Start FlightGear with the following command-line argument (via the launcher or terminal) to begin listening for the app:
 
-`--generic=socket,in,20,,5005,udp,flightyoke`
+`--generic=socket,in,20,0.0.0.0,<port>,udp,flightyoke`
+
+Change `<port>` to whatever port you set in the source code.
 
 ### 6. Operating the App
 1.  **Launch:** Open the app and hold your device like a steering wheel.
