@@ -33,7 +33,7 @@ public class SensorDriver implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        listener.onAccelerometer(event.values);
+        listener.onAccelerometer(event.values.clone());
     }
 
     @Override

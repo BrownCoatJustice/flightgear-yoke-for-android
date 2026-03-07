@@ -14,6 +14,22 @@ public class ControlMapper {
     private final SharedPreferences prefs;
     private float deadzone = 0.05f;  // 5% center deadband
 
+    /*
+    * Exponential Moving Average (EMA)
+    *   new_output =
+    *       prev_output + smoothing_factor *
+    *       (raw_input - prev_output)
+    *   Eg: Suppose, previous stable output = 0.2 and then next output = 0.6
+    *       With smoothing: 0.2 + 0.2 * (0.6 - 0.2) = 0.28 => Smoother
+    *   Less jitter at the cost of slightly higher latency.
+    *
+    * Below are the fields for the same
+    * */
+
+    private float smoothedRoll = 0f;
+    private float smoothedPitch = 0f;
+    private static final float SMOOTHING = 0.2f;
+
     public ControlMapper(Context context) {
         prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
         neutralRoll = prefs.getFloat(KEY_ROLL, 0f);
@@ -23,6 +39,9 @@ public class ControlMapper {
     public void calibrate(float rollRad, float pitchRad) {
         neutralRoll = rollRad;
         neutralPitch = pitchRad;
+
+        smoothedRoll = 0f;
+        smoothedPitch = 0f;
 
         prefs.edit()
                 .putFloat(KEY_ROLL, neutralRoll)
@@ -34,20 +53,25 @@ public class ControlMapper {
         float value = rollRad - neutralRoll;
         value /= Math.toRadians(45);
 
-        value = clamp(value);
         value = applyDeadzone(value);
+        value = clamp(value);
+        AppLogger.d("Unsmoothed, clamped and \"deadzoned\" values for ROLL: " + value);
 
-        return value;
+        smoothedRoll = smooth(value, smoothedRoll);
+
+        return smoothedRoll;
     }
 
     public float mapPitch(float pitchRad) {
         float value = pitchRad - neutralPitch;
         value /= Math.toRadians(30);
 
+        value = -(applyDeadzone(value)); // -ve to mimic real yoke
         value = clamp(value);
-        value = applyDeadzone(value);
+        AppLogger.d("Unsmoothed, clamped and \"deadzoned\" values for PITCH: " + value);
+        smoothedPitch = smooth(value, smoothedPitch);
 
-        return value;
+        return smoothedPitch;
     }
 
     private float clamp(float v) {
@@ -60,4 +84,6 @@ public class ControlMapper {
         }
         return value;
     }
+
+    private float smooth(float current, float previous) { return previous + SMOOTHING * (current - previous); }
 }
