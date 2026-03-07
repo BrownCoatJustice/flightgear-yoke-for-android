@@ -58,6 +58,9 @@ public class ControlMapper {
         AppLogger.d("Unsmoothed, clamped and \"deadzoned\" values for ROLL: " + value);
 
         smoothedRoll = smooth(value, smoothedRoll);
+        if (Math.abs(smoothedRoll) < 0.001f) {
+            smoothedRoll = 0f;
+        }
 
         return smoothedRoll;
     }
@@ -69,7 +72,11 @@ public class ControlMapper {
         value = -(applyDeadzone(value)); // -ve to mimic real yoke
         value = clamp(value);
         AppLogger.d("Unsmoothed, clamped and \"deadzoned\" values for PITCH: " + value);
+
         smoothedPitch = smooth(value, smoothedPitch);
+        if (Math.abs(smoothedPitch) < 0.001f) {
+            smoothedPitch = 0f;
+        }
 
         return smoothedPitch;
     }
