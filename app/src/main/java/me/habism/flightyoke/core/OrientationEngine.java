@@ -6,22 +6,21 @@ public class OrientationEngine {
 
     public void updateAccelerometer(float[] values) {
         accelVals = values.clone();
-        AppLogger.d("ACC X=" + accelVals[0] +
-                " Y=" + accelVals[1] +
-                " Z=" + accelVals[2]);
     }
 
-    public float getPitchRad() {
-        float y = accelVals[1];
+    public float getPitchRads() {
         float x = accelVals[0];
+        float y = accelVals[1];
+        float z = accelVals[2];
 
-        return (float) Math.atan2(y, x);
+        return (float) Math.atan2(y, Math.sqrt(x*x + z*z));
     }
 
     public float getRollRad() {
-        float z = accelVals[2];
         float x = accelVals[0];
+        float y = accelVals[1];
+        float z = accelVals[2];
 
-        return (float) Math.atan2(-z, x);
+        return (float) Math.atan2(-z, Math.sqrt(x*x + y*y));
     }
 }
