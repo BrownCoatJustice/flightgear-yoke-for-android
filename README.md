@@ -19,6 +19,13 @@ If your computer's IP address is different from the one hardcoded, you can chang
     `udpSender = UdpSender("192.168.31.174", 5005)`
 4.  Replace `"192.168.31.174"` with your computer's IP and `5005` with your desired port.
 
+#### Find your IP Address:
+Windows:
+```ipconfig```
+
+Linux/macOS:
+```ifconfig```
+
 ### 3. Deploying to Your Phone
 To run the app on your physical device, you must first enable **Developer Options** and **USB Debugging** in your phone's settings (usually by tapping "Build Number" 7 times in "About Phone").
 
@@ -35,7 +42,7 @@ To run the app on your physical device, you must first enable **Developer Option
 ### 4. FlightGear Protocol Setup
 The simulator needs a protocol file to understand the incoming data format (Roll and Pitch).
 
-1.  Locate your FlightGear **data** directory (this varies by installation and OS).
+1.  Locate your **FlightGear data directory** (this varies by installation and OS).
 2.  Inside `data`, open the `Protocol` subfolder.
 3.  Copy the `flightyoke.xml` file from the `flightgear_resources/Protocol` folder in this repo into that FlightGear `Protocol` folder.
 
@@ -45,6 +52,18 @@ Start FlightGear with the following command-line argument (via the launcher or t
 `--generic=socket,in,20,0.0.0.0,<port>,udp,flightyoke`
 
 Change `<port>` to whatever port you set in the source code.
+
+**Example:** 
+
+```bash
+fgfs --generic=socket,in,20,0.0.0.0,5005,udp,flightyoke
+```
+
+```powershell
+cd "C:\Program Files\FlightGear\bin\"
+.\fgfs.exe --generic=socket,in,20,0.0.0.0,5005,udp,flightyoke
+```
+
 
 ### 6. Operating the App
 1.  **Launch:** Open the app and hold your device like a steering wheel.
